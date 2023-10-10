@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "video splitter"
+version = "0.1.0"
+description = ""
+authors = ["Divider <89965004+it-cio@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
