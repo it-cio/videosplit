@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "video splitter"
+name = "video cutter"
 version = "0.1.0"
 description = ""
 authors = ["Divider <89965004+it-cio@users.noreply.github.com>"]
