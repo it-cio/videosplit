@@ -1,10 +1,14 @@
 import os
 import sys
+import threading
 
+import cv2
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPalette, QColor
+from PyQt5.QtGui import QPalette, QColor, QImage, QPixmap
 from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QDoubleSpinBox, QProgressBar, QVBoxLayout, QHBoxLayout, \
     QFileDialog, QMessageBox, QMainWindow, QApplication
+
+from main import Divider
 
 
 class VideoMixer(QWidget):
@@ -29,13 +33,15 @@ class VideoMixer(QWidget):
 
         v_box.addWidget(QLabel("Music file:"))
         self.input_music_path = QPushButton("Select Music File")
-        self.input_music_path.clicked.connect(self.get_music_path)
+        # self.input_music_path.clicked.connect(self.get_music_path)
+        self.input_music_path.clicked.connect(self.not_available)
         v_box.addWidget(self.input_music_path)
         v_box.addStretch()
 
         v_box.addWidget(QLabel("Logo file:"))
         self.input_logo_path = QPushButton("Select Logo File")
-        self.input_logo_path.clicked.connect(self.get_logo_path)
+        # self.input_logo_path.clicked.connect(self.get_logo_path)
+        self.input_logo_path.clicked.connect(self.not_available)
         v_box.addWidget(self.input_logo_path)
         v_box.addStretch()
 
@@ -108,7 +114,36 @@ class VideoMixer(QWidget):
             self.input_save_path.setText(self.save_path.split("/")[-1])
 
     def cut(self):
-        QMessageBox.about(self, "Info", "Under construction")
+        if (self.video_path != ""  # todo Add music and logo path
+                and self.save_path != ""
+                and self.input_video_length.value() > 0
+                and self.input_cut_length.value() > 0):
+
+            if self.save_path.split(".")[-1].lower() != "mp4":
+                self.save_path = self.save_path + ".mp4"
+
+            cutter = threading.Thread(target=StartProgress, args=(
+                self.video_path,  # todo Add music and logo path
+                self.save_path,
+                self.input_video_length.value(),
+                self.input_cut_length.value()))
+
+            cutter.start()
+            self.input_cut.setEnabled(False)
+            self.input_progress.setValue(0)
+            self.input_progress.resetFormat()
+
+        else:
+            QMessageBox.about(self, "Info", "Not all parameters are set")
+
+    def open_video_box(self):
+        button_reply = QMessageBox.question(self, "Operation Complete", "Do you want to open the video clip?",
+                                            QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+        if button_reply == QMessageBox.Yes:
+            os.startfile(self.save_path)
+
+    def not_available(self):
+        QMessageBox.about(self, "Information!", "Not Available Now...")
 
 
 class MainWindow(QMainWindow):
@@ -118,6 +153,26 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.window)
         self.setWindowTitle("Kart Video Mixer")
         self.show()
+
+
+class StartProgress(Divider):
+    def display_progress(self):
+        super().display_progress()
+        main_window.window.input_progress.setValue(self.progress)
+        frame = self.frame
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        img = QImage(frame, frame.shape[1], frame.shape[0], QImage.Format_RGB888)
+        pixel_map = QPixmap.fromImage(img)
+        pixel_map = pixel_map.scaled(600, 400, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        main_window.window.input_frame.setPixmap(pixel_map)
+
+    # todo Add music and logo functions
+
+    def run_operations(self):
+        super().run_operations()
+        main_window.window.input_progress.setFormat("Completed")
+        main_window.window.open_video_box()
+        main_window.window.input_cut.setEnabled(True)
 
 
 app = QApplication(sys.argv)
