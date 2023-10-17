@@ -4,12 +4,15 @@ from random import randint
 from sys import stdout
 
 import cv2
+from moviepy.audio.fx.audio_loop import audio_loop
+from moviepy.audio.io.AudioFileClip import AudioFileClip
 from moviepy.video.io.VideoFileClip import VideoFileClip
 
 
 class Divider:
-    def __init__(self, video_path, save_path, video_length, cut_length):  # todo Add music and logo path
+    def __init__(self, video_path, music_path, save_path, video_length, cut_length):  # todo Add logo path
         self.video_path = video_path
+        self.music_path = music_path
         self.save_path = save_path
 
         self.capture = cv2.VideoCapture(self.video_path)
@@ -40,8 +43,8 @@ class Divider:
 
     def run_operations(self):
         self.read_frames()
-        # todo Add music and logo functions
-        self.complete_operation()
+        self.add_music()
+        # todo Add logo functions
         remove("".join(self.save_path.split(".")[:-1]) + "_tmp.avi")
 
     def read_frames(self):  # Reads the frames in the source video.
@@ -86,10 +89,14 @@ class Divider:
             stdout.write("\r%d%%" % self.progress)
             stdout.flush()
 
-    # todo Add music and logo functions
-
-    def complete_operation(self):
-        clip = VideoFileClip("".join(self.save_path.split(".")[:-1]) + "_tmp.avi")
-        clip.write_videofile(self.save_path, fps=self.fps, verbose=False, logger=None)
+    def add_music(self):
+        my_clip = VideoFileClip("".join(self.save_path.split(".")[:-1]) + "_tmp.avi")
+        music = AudioFileClip(self.music_path)
+        my_clip = my_clip.set_audio(audio_loop(music, duration=my_clip.duration))
+        stdout.write("\r%s" % "Adding music...")
+        stdout.flush()
+        my_clip.write_videofile(self.save_path, fps=self.fps, verbose=False, logger=None)
         stdout.write("\r%s" % "Operation completed!")
         stdout.flush()
+
+    # todo Add logo functions

@@ -33,8 +33,8 @@ class VideoMixer(QWidget):
 
         v_box.addWidget(QLabel("Music file:"))
         self.input_music_path = QPushButton("Select Music File")
-        # self.input_music_path.clicked.connect(self.get_music_path)
-        self.input_music_path.clicked.connect(self.not_available)
+        self.input_music_path.clicked.connect(self.get_music_path)
+        # self.input_music_path.clicked.connect(self.not_available)
         v_box.addWidget(self.input_music_path)
         v_box.addStretch()
 
@@ -114,7 +114,8 @@ class VideoMixer(QWidget):
             self.input_save_path.setText(self.save_path.split("/")[-1])
 
     def cut(self):
-        if (self.video_path != ""  # todo Add music and logo path
+        if (self.video_path != ""  # todo Add logo path
+                and self.music_path != ""
                 and self.save_path != ""
                 and self.input_video_length.value() > 0
                 and self.input_cut_length.value() > 0):
@@ -123,7 +124,8 @@ class VideoMixer(QWidget):
                 self.save_path = self.save_path + ".mp4"
 
             cutter = threading.Thread(target=StartProgress, args=(
-                self.video_path,  # todo Add music and logo path
+                self.video_path,  # todo Add logo path
+                self.music_path,
                 self.save_path,
                 self.input_video_length.value(),
                 self.input_cut_length.value()))
@@ -166,7 +168,11 @@ class StartProgress(Divider):
         pixel_map = pixel_map.scaled(600, 400, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         main_window.window.input_frame.setPixmap(pixel_map)
 
-    # todo Add music and logo functions
+    def add_music(self):
+        main_window.window.input_progress.setFormat("Adding music...")
+        super().add_music()
+
+    # todo Add logo functions
 
     def run_operations(self):
         super().run_operations()
