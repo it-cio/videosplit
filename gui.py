@@ -34,14 +34,12 @@ class VideoMixer(QWidget):
         v_box.addWidget(QLabel("Music file:"))
         self.input_music_path = QPushButton("Select Music File")
         self.input_music_path.clicked.connect(self.get_music_path)
-        # self.input_music_path.clicked.connect(self.not_available)
         v_box.addWidget(self.input_music_path)
         v_box.addStretch()
 
         v_box.addWidget(QLabel("Logo file:"))
         self.input_logo_path = QPushButton("Select Logo File")
         self.input_logo_path.clicked.connect(self.get_logo_path)
-        # self.input_logo_path.clicked.connect(self.not_available)
         v_box.addWidget(self.input_logo_path)
         v_box.addStretch()
 

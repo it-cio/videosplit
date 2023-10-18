@@ -117,8 +117,6 @@ class Divider:
         stdout.flush()
 
     def complete_operation(self):
-        # clip = VideoFileClip(self.save_path)
-        # clip.write_videofile(self.save_path, fps=self.fps, verbose=False, logger=None)
         stdout.write("\r%s" % "Operation completed!")
         stdout.flush()
         remove("".join(self.save_path.split(".")[:-1]) + "_tmp.avi")
