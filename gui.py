@@ -40,8 +40,8 @@ class VideoMixer(QWidget):
 
         v_box.addWidget(QLabel("Logo file:"))
         self.input_logo_path = QPushButton("Select Logo File")
-        # self.input_logo_path.clicked.connect(self.get_logo_path)
-        self.input_logo_path.clicked.connect(self.not_available)
+        self.input_logo_path.clicked.connect(self.get_logo_path)
+        # self.input_logo_path.clicked.connect(self.not_available)
         v_box.addWidget(self.input_logo_path)
         v_box.addStretch()
 
@@ -114,8 +114,9 @@ class VideoMixer(QWidget):
             self.input_save_path.setText(self.save_path.split("/")[-1])
 
     def cut(self):
-        if (self.video_path != ""  # todo Add logo path
+        if (self.video_path != ""
                 and self.music_path != ""
+                and self.logo_path != ""
                 and self.save_path != ""
                 and self.input_video_length.value() > 0
                 and self.input_cut_length.value() > 0):
@@ -124,8 +125,9 @@ class VideoMixer(QWidget):
                 self.save_path = self.save_path + ".mp4"
 
             cutter = threading.Thread(target=StartProgress, args=(
-                self.video_path,  # todo Add logo path
+                self.video_path,
                 self.music_path,
+                self.logo_path,
                 self.save_path,
                 self.input_video_length.value(),
                 self.input_cut_length.value()))
@@ -172,7 +174,9 @@ class StartProgress(Divider):
         main_window.window.input_progress.setFormat("Adding music...")
         super().add_music()
 
-    # todo Add logo functions
+    def add_logo(self):
+        main_window.window.input_progress.setFormat("Adding logo...")
+        super().add_logo()
 
     def run_operations(self):
         super().run_operations()

@@ -6,13 +6,16 @@ from sys import stdout
 import cv2
 from moviepy.audio.fx.audio_loop import audio_loop
 from moviepy.audio.io.AudioFileClip import AudioFileClip
+from moviepy.video.VideoClip import ImageClip
+from moviepy.video.compositing.CompositeVideoClip import CompositeVideoClip
 from moviepy.video.io.VideoFileClip import VideoFileClip
 
 
 class Divider:
-    def __init__(self, video_path, music_path, save_path, video_length, cut_length):  # todo Add logo path
+    def __init__(self, video_path, music_path, logo_path, save_path, video_length, cut_length):
         self.video_path = video_path
         self.music_path = music_path
+        self.logo_path = logo_path
         self.save_path = save_path
 
         self.capture = cv2.VideoCapture(self.video_path)
@@ -44,8 +47,8 @@ class Divider:
     def run_operations(self):
         self.read_frames()
         self.add_music()
-        # todo Add logo functions
-        remove("".join(self.save_path.split(".")[:-1]) + "_tmp.avi")
+        self.add_logo()
+        self.complete_operation()
 
     def read_frames(self):  # Reads the frames in the source video.
 
@@ -90,13 +93,33 @@ class Divider:
             stdout.flush()
 
     def add_music(self):
-        my_clip = VideoFileClip("".join(self.save_path.split(".")[:-1]) + "_tmp.avi")
+        clip = VideoFileClip("".join(self.save_path.split(".")[:-1]) + "_tmp.avi")
         music = AudioFileClip(self.music_path)
-        my_clip = my_clip.set_audio(audio_loop(music, duration=my_clip.duration))
+        clip = clip.set_audio(audio_loop(music, duration=clip.duration))
         stdout.write("\r%s" % "Adding music...")
         stdout.flush()
-        my_clip.write_videofile(self.save_path, fps=self.fps, verbose=False, logger=None)
-        stdout.write("\r%s" % "Operation completed!")
+        clip.write_videofile("".join(self.save_path.split(".")[:-1]) + "_music.mp4", fps=self.fps, verbose=False,
+                             logger=None)
+        stdout.write("\r%s" % "Music added!")
         stdout.flush()
 
-    # todo Add logo functions
+    def add_logo(self):
+        clip = VideoFileClip("".join(self.save_path.split(".")[:-1]) + "_music.mp4")
+        logo = (ImageClip(self.logo_path)
+                .set_duration(clip.duration)
+                .set_opacity(0.7)
+                .set_position(("right", "bottom")))
+        clip = CompositeVideoClip([clip, logo])
+        stdout.write("\r%s" % "Adding logo...")
+        stdout.flush()
+        clip.write_videofile(self.save_path, fps=self.fps, audio=True)
+        stdout.write("\r%s" % "Logo added!")
+        stdout.flush()
+
+    def complete_operation(self):
+        # clip = VideoFileClip(self.save_path)
+        # clip.write_videofile(self.save_path, fps=self.fps, verbose=False, logger=None)
+        stdout.write("\r%s" % "Operation completed!")
+        stdout.flush()
+        remove("".join(self.save_path.split(".")[:-1]) + "_tmp.avi")
+        remove("".join(self.save_path.split(".")[:-1]) + "_music.mp4")
