@@ -31,6 +31,12 @@ class VideoMixer(QWidget):
         v_box.addWidget(self.input_video_path)
         v_box.addStretch()
 
+        v_box.addWidget(QLabel("Test file:"))
+        self.input_test_path = QPushButton("Select test File")
+        self.input_test_path.clicked.connect(self.not_available)
+        v_box.addWidget(self.input_test_path)
+        v_box.addStretch()
+
         v_box.addWidget(QLabel("Music file:"))
         self.input_music_path = QPushButton("Select Music File")
         self.input_music_path.clicked.connect(self.get_music_path)
@@ -108,6 +114,7 @@ class VideoMixer(QWidget):
     def get_save_path(self):
         self.save_path = \
             QFileDialog.getSaveFileName(self, "Select Save File Path", os.getenv("HOME"), "Video files (*.mp4)")[0]
+
         if self.save_path != "":
             self.input_save_path.setText(self.save_path.split("/")[-1])
 
