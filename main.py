@@ -98,7 +98,8 @@ class Divider:
         clip = clip.set_audio(audio_loop(music, duration=clip.duration))
         stdout.write("\r%s" % "Adding music...")
         stdout.flush()
-        clip.write_videofile("".join(self.save_path.split(".")[:-1]) + "_music.mp4", fps=self.fps, logger=None)
+        clip.write_videofile("".join(self.save_path.split(".")[:-1]) + "_music.mp4",
+                             fps=self.fps, logger=None, threads=12, preset="ultrafast")
         clip.close()
         stdout.write("\r%s" % "Music added!")
         stdout.flush()

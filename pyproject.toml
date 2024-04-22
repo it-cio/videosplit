@@ -3,13 +3,14 @@ name = "video cutter"
 version = "0.1.0"
 description = ""
 authors = ["Divider <89965004+it-cio@users.noreply.github.com>"]
-readme = "README.md"
+package-mode = false
+# readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
 opencv-python = "^4.8.1.78"
 moviepy = "^1.0.3"
-pyqt5 = "^5.15.9"
+pyqt5 = "^5.15.10"
 
 
 [build-system]
