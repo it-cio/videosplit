@@ -98,8 +98,8 @@ class Divider:
         clip = clip.set_audio(audio_loop(music, duration=clip.duration))
         stdout.write("\r%s" % "Adding music...")
         stdout.flush()
-        clip.write_videofile("".join(self.save_path.split(".")[:-1]) + "_music.mp4", fps=self.fps, verbose=False,
-                             logger=None)
+        clip.write_videofile("".join(self.save_path.split(".")[:-1]) + "_music.mp4", fps=self.fps, logger=None)
+        clip.close()
         stdout.write("\r%s" % "Music added!")
         stdout.flush()
 
@@ -108,11 +108,12 @@ class Divider:
         logo = (ImageClip(self.logo_path)
                 .set_duration(clip.duration)
                 .set_opacity(0.7)
-                .set_position(("right", "bottom")))
+                .set_position(("center", "bottom")))
         clip = CompositeVideoClip([clip, logo])
         stdout.write("\r%s" % "Adding logo...")
         stdout.flush()
-        clip.write_videofile(self.save_path, fps=self.fps, audio=True)
+        clip.write_videofile(self.save_path, fps=self.fps, audio=True, verbose=False)
+        clip.close()
         stdout.write("\r%s" % "Logo added!")
         stdout.flush()
 
