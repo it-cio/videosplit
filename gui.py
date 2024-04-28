@@ -18,11 +18,11 @@ class VideoMixer(QWidget):
         # self.video_path = ""
         self.video_race = ""
         self.video_pilot = ""
-        self.music_path = "D:/Git/videocutter/data/music/"
-        self.logo_path = "D:/Git/videocutter/data/logo/logo.png"
-        self.end_logo_path = "D:/Git/videocutter/data/logo/last.jpg"
+        self.music_path = "D:/Divider/data/music/"
+        self.logo_path = "D:/Divider/data/logo/logo.png"
+        self.end_logo_path = "D:/Divider/data/logo/last.jpg"
         self.save_path = ""
-        self.temp_path = "D:/Git/videocutter/data/temp/"
+        self.temp_path = "D:/Divider/data/temp/"
         self.video_length = 57
         self.cut_length = 3
 
@@ -65,7 +65,8 @@ class VideoMixer(QWidget):
         self.setLayout(v_box)
 
     # def get_video_path(self):
-    #     self.video_path = QFileDialog.getExistingDirectory(self, "Выберите папку с исходниками", os.getenv("HOME", '/GoPro'))
+    #     self.video_path = QFileDialog.
+    #     getExistingDirectory(self, "Выберите папку с исходниками", os.getenv("HOME", '/GoPro'))
     #     if self.video_path != "":
     #         self.input_video_path.setText(self.video_path.split("/")[-1])
     #         self.save_path = f"{self.video_path}/SiriusAutodrom.mp4"

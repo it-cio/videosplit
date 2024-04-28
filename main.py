@@ -46,7 +46,7 @@ class Divider:
         #     with (open(f"{self.video_path}/{file_list[0]}", 'rb') as src,
         #           open(f"{self.temp_path}_video.mp4", 'wb') as dst):
         #         dst.write(src.read())
-            # os.rename(f"{self.video_path}/{file_list[0]}", f"{self.temp_path}_video.mp4")
+        #     os.rename(f"{self.video_path}/{file_list[0]}", f"{self.temp_path}_video.mp4")
 
         # clip1_duration = VideoFileClip(video_race).duration
         # clip1_start = clip1_duration / 2 - video_length
@@ -56,18 +56,41 @@ class Divider:
         # clip2_start = clip2_duration / 2 - video_length
         # clip2_end = clip2_duration / 2 + video_length
 
-        def set_duration(path, length):
+        # def set_duration(path, length):
+        #     clip_duration = VideoFileClip(path).duration
+        #     clip_start = round((clip_duration/2) - (length/2))
+        #     clip_end = round((clip_duration/2) + (length/2))
+        #     print("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
+        #     print(f"clip: {path}")
+        #     print(f"clip_start: {clip_start}")
+        #     print(f"clip_end: {clip_end}")
+        #     print("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-")
+        #     return clip_start, clip_end
+        #
+        # race = (VideoFileClip(video_race)
+        #         .subclip(','.join(str(time) for time in set_duration(video_race, video_length)))
+        #         .fx(vfx.speedx, 1.2))
+        #
+        # pilot = (VideoFileClip(video_pilot)
+        #          .subclip(','.join(str(time) for time in set_duration(video_pilot, video_length)))
+        #          .fx(vfx.speedx, 1.2)
+        #          .resize(0.40))
+        def set_start(path, length):
             clip_duration = VideoFileClip(path).duration
-            clip_start = round(clip_duration / 2 - length)
-            clip_end = round(clip_duration / 2 + length)
-            return clip_start, clip_end
+            clip_start = round((clip_duration/2) - length)
+            return clip_start
+
+        def set_end(path, length):
+            clip_duration = VideoFileClip(path).duration
+            clip_end = round((clip_duration/2) + length)
+            return clip_end
 
         race = (VideoFileClip(video_race)
-                .subclip(','.join(str(time) for time in set_duration(video_race, video_length)))
+                .subclip(set_start(video_race, video_length), set_end(video_race, video_length))
                 .fx(vfx.speedx, 1.2))
 
         pilot = (VideoFileClip(video_pilot)
-                 .subclip(','.join(str(time) for time in set_duration(video_pilot, video_length)))
+                 .subclip(set_start(video_pilot, video_length), set_end(video_pilot, video_length))
                  .fx(vfx.speedx, 1.2)
                  .resize(0.40))
 
@@ -159,7 +182,7 @@ class Divider:
                 .set_opacity(0.7)
                 .set_position(("center", "bottom"))).resize(0.10)
         end_logo = (VideoFileClip(self.end_logo_path)
-                     .set_duration(6))
+                    .set_duration(6))
         clip = CompositeVideoClip([clip, logo, end_logo.set_start(54).crossfadein(3)])
 
         stdout.write("\r%s" % "Mixing...")
