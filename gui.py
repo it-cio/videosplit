@@ -72,13 +72,13 @@ class VideoMixer(QWidget):
     #         self.save_path = f"{self.video_path}/SiriusAutodrom.mp4"
 
     def get_video_race(self):
-        self.video_race = QFileDialog.getOpenFileName(self, "Select Video File", os.getenv("HOME", '/GoPro'),
+        self.video_race = QFileDialog.getOpenFileName(self, "Select Video File", os.getenv("HOME", '/YandexDisk/GoPro'),
                                                       "Video files (*.mp4 *.avi *.wmv *.mov *.mkv)")[0]
         if self.video_race != "":
             self.input_video_race.setText(self.video_race.split("/")[-1])
 
     def get_video_pilot(self):
-        self.video_pilot = QFileDialog.getOpenFileName(self, "Select Video File", os.getenv("HOME", '/GoPro'),
+        self.video_pilot = QFileDialog.getOpenFileName(self, "Select Video File", os.getenv("HOME", '/YandexDisk/GoPro'),
                                                        "Video files (*.mp4 *.avi *.wmv *.mov *.mkv)")[0]
         if self.video_pilot != "":
             self.input_video_pilot.setText(self.video_pilot.split("/")[-1])
